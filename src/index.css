@@ -1,3 +1,5 @@
+/* CSS Modulesのスタイル定義 */
+/* シンプル、追加ライブラリ不要、スコープ分離 */
 body {
   margin: 0;
   padding: 0;

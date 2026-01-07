@@ -1,8 +1,8 @@
+import { TodoTemplate } from "../../components/templates";
+
 export const TodoPage = () => {
-  return (
-    <div>
-      <h1>Todo アプリ</h1>
-      <p>これから Todo 機能を実装します</p>
-    </div>
-  );
+  return <TodoTemplate />;
 };
+
+// コンポーネントの中身を実装
+// index.js と分けるBarrel Export パターン

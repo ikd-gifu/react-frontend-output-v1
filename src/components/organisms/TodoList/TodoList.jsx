@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+
 import styles from "./style.module.css";
 
 export const TodoList = ({ todoList }) => {
@@ -10,7 +13,9 @@ export const TodoList = ({ todoList }) => {
           {todoList.map((todo) => (
             <li key={todo.id} className={styles.item}>
               <span className={styles.title}>{todo.title}</span>
-              <button className={styles.deleteButton}>削除</button>
+              <div className={styles.far}>
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </div>
             </li>
           ))}
         </ul>

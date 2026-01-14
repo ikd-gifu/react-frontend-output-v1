@@ -1,3 +1,11 @@
+# Monorepo - 各プロジェクトのnode_modules
+*/node_modules/
+*/dist/
+*/dist-ssr/
+*/.env
+*/.env.local
+*/.env.*.local
+
 # Logs
 logs
 *.log
@@ -7,10 +15,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Build outputs
+*/build/
+*/.vite/
+
+# Test coverage
+*/coverage/
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +32,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+.DS_Store
+Thumbs.db

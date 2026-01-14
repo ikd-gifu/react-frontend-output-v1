@@ -1,34 +1,169 @@
-# react-frontend-output-v1
-Reactを用いたTodoアプリ
+# React Todo - 状態管理パターンの比較実装
 
-## 1. 環境構築
-### 1-1. ライブラリ インストール
+このリポジトリは、同一のTodoアプリを異なる状態管理パターンで実装し、それぞれのアプローチの特性を比較学習するプロジェクトです。
+
+## 📁 プロジェクト構成
+
 ```
+react-todo-state-management/
+├── 01-custom-hooks/     # カスタムフックによる状態管理
+├── 02-context-api/      # Context APIによるグローバル状態管理（予定）
+└── 03-redux/            # Reduxによる集中的な状態管理（予定）
+```
+
+## 🎯 学習目的
+
+- **ローカル状態管理とグローバル状態管理の違いを理解する**
+- **各状態管理パターンの適用場面を判断できるようになる**
+- **実務で使われる複数のアプローチを体験する**
+
+## 📊 状態管理パターンの比較
+
+| アプローチ | 適用場面 | 学習状況 | 実装ディレクトリ |
+|-----------|---------|---------|----------------|
+| **Custom Hooks** | 小〜中規模、ローカル状態 | ✅ 完成 | `01-custom-hooks/` |
+| **Context API** | 中規模、グローバル状態 | 🚧 実装予定 | `02-context-api/` |
+| **Redux** | 大規模、複雑な状態管理 | 📝 計画中 | `03-redux/` |
+
+## 🚀 各実装の起動方法
+
+各ディレクトリは独立したプロジェクトとして起動できます。
+
+```bash
+# Custom Hooks版
+cd 01-custom-hooks
 npm install
-または
-yarn
-```
-
-### 1-2. アプリケーション実行
-```
 npm run dev
-または
-yarn dev
 ```
 
-# React + Vite
+起動後、ブラウザで http://localhost:5174 にアクセス
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 💻 技術スタック
 
-Currently, two official plugins are available:
+### 共通
+- **React** 19.2.0
+- **Vite** - ビルドツール
+- **CSS Modules** - スタイリング
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### テスト（01-custom-hooks）
+- **Vitest** - テストランナー
+- **React Testing Library** - コンポーネントテスト
+- **jsdom** - DOM環境のシミュレーション
 
-## React Compiler
+## 📝 実装済み機能（01-custom-hooks）
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 基本機能
+- ✅ Todoの追加（Enterキーで追加）
+- ✅ Todoの削除（確認ダイアログ付き）
+- ✅ Todo検索（インクリメンタルサーチ）
+- ✅ IME入力時の二重実行防止
 
-## Expanding the ESLint configuration
+### アーキテクチャ
+- ✅ Atomic Design パターン
+- ✅ カスタムフック（useTodo）による状態管理
+- ✅ CSS Modules によるスタイル分離
+- ✅ テストコード実装
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🏗️ ディレクトリ構成（01-custom-hooks）
+
+```
+01-custom-hooks/
+├── src/
+│   ├── components/
+│   │   ├── atoms/          # 最小単位のコンポーネント
+│   │   │   └── InputForm/
+│   │   ├── organisms/      # 機能を持つコンポーネント
+│   │   │   ├── AddTodo/
+│   │   │   └── TodoList/
+│   │   └── templates/      # ページレイアウト
+│   │       └── TodoTemplate/
+│   ├── pages/              # ページコンポーネント
+│   │   └── TodoPage/
+│   ├── hooks/              # カスタムフック
+│   │   ├── useTodo.js
+│   │   └── useTodo.test.js
+│   └── constants/          # 定数
+│       └── data.js
+├── package.json
+└── vite.config.js
+```
+
+## 🔄 今後の実装予定
+
+### Phase 1: Context API実装（02-context-api）
+- [ ] TodoContext の作成
+- [ ] Provider によるグローバル状態管理
+- [ ] useContext を使ったコンポーネント実装
+- [ ] Custom Hooks版との比較ドキュメント作成
+
+### Phase 2: Redux実装（03-redux）
+- [ ] Redux Toolkit のセットアップ
+- [ ] Store と Slice の実装
+- [ ] useSelector / useDispatch の使用
+- [ ] 3つのアプローチの総合比較
+
+## 📚 学習ポイント
+
+### Custom Hooks（完成）
+**メリット:**
+- シンプルで理解しやすい
+- 小規模なアプリに適している
+- コンポーネント間で状態ロジックを再利用可能
+
+**デメリット:**
+- グローバル状態の管理には不向き
+- Prop Drilling が発生する可能性
+
+**適用場面:**
+- 1つのページ内で完結する状態管理
+- 複数のコンポーネントで同じロジックを再利用したい場合
+
+### Context API（予定）
+**メリット:**
+- Reactの標準機能
+- グローバル状態を簡単に管理
+- Prop Drilling を解消
+
+**デメリット:**
+- 複雑な状態管理には不向き
+- パフォーマンス最適化が必要な場合がある
+
+**適用場面:**
+- 認証状態、テーマ設定など
+- 中規模アプリのグローバル状態管理
+
+### Redux（予定）
+**メリット:**
+- 大規模アプリでも状態管理がしやすい
+- DevTools で状態変化を追跡可能
+- ミドルウェアによる拡張性
+
+**デメリット:**
+- 学習コストが高い
+- ボイラープレートが多い
+
+**適用場面:**
+- 大規模アプリ
+- 複雑な状態管理が必要な場合
+- 状態変化の履歴管理が必要な場合
+
+## 🎓 実装を通じて学んだこと
+
+### Custom Hooks版での学び
+1. **状態管理ロジックの分離** - UIとロジックを分離することで、テストがしやすくなる
+2. **IME対応の重要性** - 日本語入力時の特殊なハンドリングが必要
+3. **useMemoの活用** - 検索フィルタリングなど、計算コストが高い処理の最適化
+4. **テストの書き方** - カスタムフックのテストパターン
+
+## 🔗 関連リポジトリ
+
+- [react-todo-router-ts](予定) - React Router + TypeScript版
+- [react-todo-fullstack](予定) - バックエンド統合 + 認証機能
+
+## 📄 ライセンス
+
+このプロジェクトは学習目的で作成されています。
+
+## 👤 作成者
+
+学習用ポートフォリオプロジェクト

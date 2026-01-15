@@ -3,7 +3,7 @@
 import styles from "./style.module.css";
 import { AddTodo, TodoList } from "../../organisms/";
 import { InputForm } from "../../atoms";
-import { useTodo } from "../../../hooks/useTodo";
+import { useTodoContext } from "../../../hooks/useTodoContext";
 
 // 全ての状態を管理
 // originTodoListは複数のコンポーネントで使われる
@@ -18,7 +18,7 @@ export const TodoTemplate = () => {
     handleAddTodo,
     onChangeAddInputValue,
     setSearchInputValue
-  } = useTodo();
+  } = useTodoContext();
 
   return (
     <div className={styles.container}>

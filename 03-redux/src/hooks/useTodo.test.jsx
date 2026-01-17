@@ -1,12 +1,36 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
+import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
+import todoReducer from '../store/todoSlice'
 import { useTodo } from './useTodo'
 
+// 各テストで新しいstoreを作成する関数
+const createTestStore = () => configureStore({
+  reducer: {
+    todo: todoReducer,
+  },
+});
+
+// 各テストで新しいwrapperを生成
+const createWrapper = (store) => ({ children }) => (
+  <Provider store={store}>{children}</Provider>
+);
+
 describe("useTodo Hooksのテスト", () => {
+  let store;
+  let wrapper;
+
+  // 各テスト実行前に新しいstoreとwrapperを生成
+  beforeEach(() => {
+    store = createTestStore();
+    wrapper = createWrapper(store);
+  });
+
   describe("onChangeAddInputValue関数のテスト", () => {
     test("【正常系】初期状態が空文字であること", () => {
       // フックをレンダリング
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       // React Hooksは再レンダリングで関数が再生成されるため、result.currentから直接呼ぶ
       // 参照が古くなるのを防ぐため
       expect(result.current.addInputValue).toBe("");
@@ -15,7 +39,7 @@ describe("useTodo Hooksのテスト", () => {
     // フックをレンダリング
     // React HooksはReactコンポーネント内でしか呼び出せないルールがあるため
     test("入力値を正しく更新する", () => {
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       // イベントオブジェクト(引数)を作成
       const mockEvent = {
@@ -36,7 +60,7 @@ describe("useTodo Hooksのテスト", () => {
   describe("handleAddTodo関数のテスト", () => {
     test("【正常系】Enterキーで新しいTodoが追加されること", () => {
     // hooks呼び出し
-    const { result } = renderHook(() => useTodo());
+    const { result } = renderHook(() => useTodo(), { wrapper });
     
     // 初期状態のTodoリストの長さを取得
     const initialLength = result.current.showTodoList.length;
@@ -70,7 +94,7 @@ describe("useTodo Hooksのテスト", () => {
     })
 
     test("【正常系】Enterキーがない場合は追加されないこと", () => {
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       const initialLength = result.current.showTodoList.length;
       
@@ -96,7 +120,7 @@ describe("useTodo Hooksのテスト", () => {
     });
 
     test("【正常系】入力値が空の場合は追加されないこと", () => {
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       const initialLength = result.current.showTodoList.length;
       
@@ -114,7 +138,7 @@ describe("useTodo Hooksのテスト", () => {
     });
 
     test("【正常系】IME変換中は追加されないこと", () => {
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       const initialLength = result.current.showTodoList.length;
       
@@ -146,7 +170,7 @@ describe("useTodo Hooksのテスト", () => {
       // window.confirmをモック化（OKをクリック）
       window.confirm = vi.fn().mockReturnValueOnce(true);
 
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       // 削除対象のTodoを取得
       // INIT_TODO_LISTをインポートしないで済むように、動的に取得する
@@ -170,7 +194,7 @@ describe("useTodo Hooksのテスト", () => {
       // window.confirmをモック化（キャンセルをクリック）
       window.confirm = vi.fn().mockReturnValueOnce(false);
 
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
       
       // 削除対象のTodoを取得
       const targetTodo = result.current.showTodoList[0];
@@ -190,7 +214,7 @@ describe("useTodo Hooksのテスト", () => {
 
   describe("setSearchInputValue関数のテスト", () => {
     test("【正常系】検索ワードで前方一致検索されること", () => { 
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
 
       // 初期状態のリストを保存
       const initialTodos = [...result.current.showTodoList];
@@ -212,7 +236,7 @@ describe("useTodo Hooksのテスト", () => {
     });
 
     test("【正常系】検索ワードが空の場合は全件表示されること", () => {
-      const { result } = renderHook(() => useTodo());
+      const { result } = renderHook(() => useTodo(), { wrapper });
 
       const initialTodos = [...result.current.showTodoList];
       

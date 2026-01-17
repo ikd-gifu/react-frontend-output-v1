@@ -1,16 +1,17 @@
 import { useState, useMemo } from "react";
-import { INITIAL_TODOS, INITIAL_UNIQUE_ID } from "../constants/data";
+import { useSelector, useDispatch } from "react-redux";  // ← Redux フック
+import { addTodo, deleteTodo } from "../store/todoSlice"; // ← Action Creators
 
 export const useTodo = () => {
   // todo listの状態管理
-  // const [現在の値, 値を更新するための関数] = useState(初期値);
-  const [originalTodoList, setOriginalTodoList] = useState(INITIAL_TODOS );
+  // Redux store から状態を取得
+  const originalTodoList = useSelector((state) => state.todo.todos); 
+  // useDispatch: Action を dispatch する関数を取得
+  const dispatch = useDispatch();
+
   // 追加用の入力値の状態管理 初期値を空文字に設定
   const [addInputValue, setAddInputValue] = useState("");
-  // 重複しない ID を生成
-  // const [uniqueId, setUniqueId] = useState(INITIAL_TODOS.length + 1); データはdata.jsで一元管理
-  const [uniqueId, setUniqueId] = useState(INITIAL_UNIQUE_ID);
-    // 検索用のキーワードの状態管理 初期値を空文字に設定
+  // 検索用のキーワードの状態管理 初期値を空文字に設定
   const [searchInputValue, setSearchInputValue] = useState("");
   // 検索用の入力値に基づいて表示するTodoリストを絞り込む
   const showTodoList = useMemo(() => {
@@ -35,24 +36,9 @@ export const useTodo = () => {
   const handleAddTodo = (e) => {
     // IME変換中は処理しない
     if (e.key === "Enter" && !e.nativeEvent.isComposing && addInputValue !== "") {
-      const nextId = uniqueId + 1;
+      // Redux の addTodo アクションを dispatch
+      dispatch(addTodo(addInputValue));
 
-      // 新しいTodoを作成
-      // 元の配列をコピーして、その値でstateを更新する
-      // 配列要素を追加しても配列の参照は変わらないため、Reactが変更を検知できない
-      const newTodoList = [
-        ...originalTodoList,
-        {
-          id: nextId,
-          title: addInputValue,
-        },
-      ];
-      // 状態を更新
-      setOriginalTodoList(newTodoList);
-
-      // nextIdを更新
-      // DBの自動採番のイメージ
-      setUniqueId(nextId);
       // 入力フォームを空にする
       setAddInputValue("");
     }
@@ -66,11 +52,12 @@ export const useTodo = () => {
   const handleDeleteTodo = (targetId, targetTitle) => {
     // 確認ダイアログを表示
     if (window.confirm(`「${targetTitle}」を削除しますか？`)) {
-      // 削除対象のID以外のTodoだけを残す
-      const newTodoList = originalTodoList.filter((todo) => todo.id !== targetId);
+      // Redux Store の deleteTodo アクションを dispatch
+      // 自動で状態が更新される
+      dispatch(deleteTodo(targetId));
       
-      // 状態を更新
-      setOriginalTodoList(newTodoList);
+      // 手動で状態を更新する必要がないため、以下の行は不要
+      // setOriginalTodoList(newTodoList);
     }
   };
 

@@ -5,11 +5,16 @@ import { configureStore } from '@reduxjs/toolkit'
 import todoReducer from '../store/todoSlice'
 import { useTodo } from './useTodo'
 
-// 各テストで新しいstoreを作成する関数
-const createTestStore = () => configureStore({
+/**
+ * テスト用のRedux Storeを作成
+ * @param {Object} preloadedState - テスト用の初期状態（明示的に指定）
+ * @returns {Object} Redux Store
+ */
+const createTestStore = (preloadedState) => configureStore({
   reducer: {
     todo: todoReducer,
   },
+  preloadedState,
 });
 
 // 各テストで新しいwrapperを生成
@@ -18,12 +23,26 @@ const createWrapper = (store) => ({ children }) => (
 );
 
 describe("useTodo Hooksのテスト", () => {
+  // テスト用の初期データ（data.jsに依存せず、テスト内で明示的に定義）
+  const DEFAULT_TEST_TODOS = [
+    { id: 1, title: "ReactでTodoアプリを作成する" },
+    { id: 2, title: "CSS Modulesを理解する" },
+    { id: 3, title: "コンポーネント設計を学ぶ" },
+    { id: 4, title: "状態管理を実装する" },
+  ];
+  const DEFAULT_UNIQUE_ID = 4;
+
   let store;
   let wrapper;
 
-  // 各テスト実行前に新しいstoreとwrapperを生成
+  // 各テスト実行前に新しいstoreとwrapperを生成（デフォルトのテストデータを使用）
   beforeEach(() => {
-    store = createTestStore();
+    store = createTestStore({
+      todo: {
+        todos: DEFAULT_TEST_TODOS,
+        uniqueId: DEFAULT_UNIQUE_ID,
+      }
+    });
     wrapper = createWrapper(store);
   });
 
